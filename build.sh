@@ -65,12 +65,10 @@ check_dirs() {
 }
 
 validate() {
-    local txt=`exec 2>/dev/null
-        file ${CRASHSRCDIR}/crash | fgrep 'executable'`
+    local txt=`exec 2>/dev/null file ${CRASHSRCDIR}/crash | fgrep 'executable'`
     test -z "$txt" && \
         die "crash has not been built in ${CRASHSRCDIR}"
-    txt=`sed -n 's/^m4_define(PYTHON_VERSION, *\([0-9.]*\).*/\1/p` \
-        ${PYTHONSRCDIR}/configure.??`
+    txt=`sed -n 's/^m4_define(PYTHON_VERSION, *\([0-9.]*\).*/\1/p' ${PYTHONSRCDIR}/configure.??`
     test -z "$txt" && \
         die "python sources are not in ${PYTHONSRCDIR}"
     case "$txt" in
@@ -81,8 +79,7 @@ validate() {
         ;;
     esac
 
-    txt=`exec 2>/dev/null
-        file ${PYTHONBLDDIR}/Modules/main.o | fgrep relocatable`
+    txt=`exec 2>/dev/null file ${PYTHONBLDDIR}/Modules/main.o | fgrep relocatable`
     test -z "$txt" && \
         die "python has not been built in ${PYTHONBLDDIR} or" \
             "${nl}it was not built as a relocatable object"
